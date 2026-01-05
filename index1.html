@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Archive - Batch of 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Garamond', 'Times New Roman', serif;
+            background-color: #000000;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .header h1 {
+            font-size: 5.5rem;
+            letter-spacing: 0.6em;
+            font-weight: 300;
+            margin-bottom: 12px;
+            text-indent: 0.6em;
+        }
+
+        .header h1 .memory {
+            color: #ffffff;
+        }
+
+        .header h1 .archive {
+            color: #c9a961;
+        }
+
+        .header p {
+            font-size: 0.7rem;
+            letter-spacing: 0.4em;
+            color: #4a4a4a;
+            text-transform: uppercase;
+            font-weight: 300;
+            text-indent: 0.4em;
+        }
+
+        .main-wrapper {
+            width: 100%;
+            max-width: 1500px;
+            position: relative;
+        }
+
+        .container {
+            border: 2px solid #6b5d3f;
+            position: relative;
+            width: 100%;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 0;
+            width: 100%;
+            aspect-ratio: 16/9;
+            min-height: 700px;
+            background: #000;
+        }
+
+        .panel {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            background: #000;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            z-index: 1;
+        }
+
+        .panel:hover {
+            z-index: 20;
+        }
+
+        .panel::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.8) 100%);
+            z-index: 1;
+            transition: all 0.6s ease;
+        }
+
+        .panel:hover::after {
+            opacity: 0.4;
+            background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.5) 100%);
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, 
+                rgba(255,100,200,0.3) 0%, 
+                rgba(100,200,255,0.3) 25%,
+                rgba(200,255,100,0.3) 50%,
+                rgba(255,200,100,0.3) 75%,
+                rgba(255,100,200,0.3) 100%);
+            opacity: 0;
+            z-index: 3;
+            mix-blend-mode: overlay;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+        }
+
+        .panel:hover::before {
+            opacity: 0.6;
+        }
+
+        .panel-image {
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            opacity: 0.4;
+            filter: grayscale(100%) blur(0px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .panel:hover .panel-image {
+            filter: grayscale(0%) blur(0px);
+            opacity: 0.7;
+            transform: scale(1.1);
+        }
+
+        .onam-bg {
+            background-image: url('happy-onam-photo-1756571174.webp');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .lafest-bg {
+            background-image: url('IMG_20260105_124934.png');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .christmas-bg {
+            background-image: url('a-cozy-fireplace-with-a-christmas-tree-and-four-red-stockings-hanging-from-it-photo.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .class-bg {
+            background-image: url('WhatsApp Image 2025-12-05 at 9.30.12 PM.jpeg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .panel-content {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            z-index: 2;
+        }
+
+        .panel-title {
+            font-size: 3.5rem;
+            letter-spacing: 0.4em;
+            font-weight: 300;
+            text-transform: uppercase;
+            text-shadow: 4px 4px 15px rgba(0,0,0,0.95);
+            text-indent: 0.4em;
+            transition: all 0.6s ease;
+        }
+
+        .panel:hover .panel-title {
+            transform: translateZ(30px);
+            text-shadow: 
+                4px 4px 15px rgba(0,0,0,0.95),
+                0 0 30px rgba(201,169,97,0.6),
+                0 0 50px rgba(201,169,97,0.4);
+        }
+
+        .diamond-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 650px;
+            height: 650px;
+            transform: translate(-50%, -50%) rotate(45deg);
+            z-index: 10;
+            pointer-events: all;
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .diamond {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0f0f0f 0%, #050505 50%, #000000 100%);
+            border: 3px solid #5a4d32;
+            position: relative;
+            box-shadow: 
+                0 0 100px rgba(0,0,0,0.9),
+                inset 0 0 60px rgba(0,0,0,0.7);
+            transition: all 0.6s ease;
+        }
+
+        .diamond::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            right: 25px;
+            bottom: 25px;
+            border: 1px solid #3a3225;
+            transition: all 0.6s ease;
+        }
+
+        .diamond::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, 
+                rgba(255,100,200,0.3) 0%, 
+                rgba(100,200,255,0.3) 25%,
+                rgba(200,255,100,0.3) 50%,
+                rgba(255,200,100,0.3) 75%,
+                rgba(255,100,200,0.3) 100%);
+            opacity: 0;
+            mix-blend-mode: overlay;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+        }
+
+        .diamond-container:hover .diamond::after {
+            opacity: 0.6;
+        }
+
+        .diamond-container:hover .diamond {
+            box-shadow: 
+                0 0 100px rgba(0,0,0,0.9),
+                inset 0 0 60px rgba(0,0,0,0.7),
+                0 0 40px rgba(201,169,97,0.4);
+            border-color: #6b5d3f;
+        }
+
+        .diamond-container:hover .diamond::before {
+            border-color: #5a4d32;
+        }
+
+        .diamond-inner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            text-align: center;
+            width: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .rewind-text {
+            font-size: 6rem;
+            letter-spacing: 0.5em;
+            font-weight: 300;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-indent: 0.5em;
+            line-height: 1;
+            transition: all 0.6s ease;
+        }
+
+        .diamond-container:hover .rewind-text {
+            transform: translateZ(30px);
+            text-shadow: 
+                4px 4px 15px rgba(0,0,0,0.95),
+                0 0 30px rgba(201,169,97,0.6),
+                0 0 50px rgba(201,169,97,0.4);
+        }
+
+        /* Diamond background image */
+        .diamond-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url('0_vIC9uJ5r1m6bzIZu.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(100%) blur(0px);
+            opacity: 0.3;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .diamond-container:hover .diamond-bg {
+            filter: grayscale(0%) blur(0px);
+            opacity: 0.5;
+            transform: scale(1.1);
+        }
+
+        .batch-text {
+            font-size: 0.75rem;
+            letter-spacing: 0.5em;
+            color: #5a5a5a;
+            text-transform: uppercase;
+            font-weight: 300;
+            text-indent: 0.5em;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 40px;
+            color: #3a3a3a;
+            font-size: 0.7rem;
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            font-weight: 300;
+            text-indent: 0.4em;
+        }
+
+        /* Blur effect when panel is hovered */
+        .panel-hovered .header,
+        .panel-hovered .footer-text,
+        .panel-hovered .diamond-container:not(:hover),
+        .panel-hovered .panel:not(:hover) {
+            filter: blur(5px);
+            transition: filter 0.3s ease;
+        }
+
+        .panel-hovered .panel:hover,
+        .panel-hovered .diamond-container:hover {
+            filter: none;
+        }
+
+        .nav-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #c9a961;
+            color: #000;
+            border: 2px solid #c9a961;
+            padding: 10px 20px;
+            font-family: 'Garamond', 'Times New Roman', serif;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 300;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-radius: 25px;
+            box-shadow: 0 0 10px #c9a961, 0 0 20px #c9a961, 0 0 30px #c9a961, 0 0 40px #c9a961;
+        }
+
+        .nav-button:hover {
+            background: #b89a55;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px #c9a961, 0 0 30px #c9a961, 0 0 45px #c9a961, 0 0 60px #c9a961;
+        }
+
+        
+        
+   
+
+    
+        
+
+        @media (max-width: 1400px) {
+            .header h1 {
+                font-size: 4.5rem;
+            }
+
+            .diamond-container {
+                width: 550px;
+                height: 550px;
+            }
+
+            .rewind-text {
+                font-size: 5rem;
+            }
+
+            .panel-title {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            body {
+                padding: 40px 20px;
+            }
+
+            .header h1 {
+                font-size: 3.5rem;
+            }
+
+            .grid {
+                min-height: 600px;
+            }
+
+            .diamond-container {
+                width: 450px;
+                height: 450px;
+            }
+
+            .rewind-text {
+                font-size: 4rem;
+            }
+
+            .panel-title {
+                font-size: 2.5rem;
+            }
+
+            .panel-content {
+                bottom: 35px;
+                left: 35px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(4, 1fr);
+                min-height: 800px;
+            }
+
+            .diamond-container {
+                width: 300px;
+                height: 300px;
+            }
+
+            .rewind-text {
+                font-size: 2.5rem;
+            }
+
+            .panel-title {
+                font-size: 2rem;
+            }
+
+            .panel-content {
+                bottom: 25px;
+                left: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="nav-button" onclick="window.location.href='https://batchof2026.lovable.app/'">GLOBE</button>
+    <div class="header">
+        <h1><span class="memory">MEMORY</span> <span class="archive">ARCHIVE</span></h1>
+        <p>BATCH OF 2026 • SELECT AN EVENT</p>
+    </div>
+
+    <div class="main-wrapper">
+        <div class="container">
+            <div class="close-icon">×</div>
+            
+            <div class="grid">
+                <div class="panel">
+                    <div class="panel-image onam-bg"></div>
+                    <div class="panel-content">
+                        <div class="panel-title">ONAM</div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-image lafest-bg"></div>
+                    <div class="panel-content">
+                        <div class="panel-title">LA FEST</div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-image christmas-bg"></div>
+                    <div class="panel-content">
+                        <div class="panel-title">CHRISTMAS</div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-image class-bg"></div>
+                    <div class="panel-content">
+                        <div class="panel-title">CLASS</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="diamond-container">
+                <div class="diamond">
+                    <div class="diamond-bg"></div>
+                    <div class="diamond-inner">
+                        <div class="rewind-text">FAREWELL</div>
+                        <div class="batch-text">BATCH OF 2026</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-text">
+            CLICK ANY PANEL TO VIEW ALBUM
+        </div>
+    </div>
+
+
+
+    <script>
+        const panels = document.querySelectorAll('.panel');
+        const diamondContainer = document.querySelector('.diamond-container');
+        
+        panels.forEach(panel => {
+            panel.addEventListener('click', function() {
+                window.location.href = 'https://albumnet.lovable.app';
+            });
+
+            // Add blur effect on hover
+            panel.addEventListener('mouseenter', function() {
+                document.body.classList.add('panel-hovered');
+            });
+
+            panel.addEventListener('mouseleave', function() {
+                document.body.classList.remove('panel-hovered');
+            });
+
+            // Holographic tilt effect
+            panel.addEventListener('mousemove', function(e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+
+                this.style.transform = `
+                    perspective(1000px)
+                    rotateX(${rotateX}deg)
+                    rotateY(${rotateY}deg)
+                    scale(1.05)
+                `;
+
+                // Update holographic gradient position
+                const percentX = (x / rect.width) * 100;
+                const percentY = (y / rect.height) * 100;
+
+                const hologram = this.querySelector('::before');
+                this.style.setProperty('--x', percentX + '%');
+                this.style.setProperty('--y', percentY + '%');
+            });
+
+            panel.addEventListener('mouseleave', function() {
+                this.style.transform = `
+                    perspective(1000px)
+                    rotateX(0deg)
+                    rotateY(0deg)
+                    scale(1)
+                `;
+            });
+        });
+
+        // Diamond holographic tilt effect
+        diamondContainer.addEventListener('click', function() {
+            window.location.href = 'https://albumnet.lovable.app';
+        });
+
+        // Add blur effect on hover for diamond
+        diamondContainer.addEventListener('mouseenter', function() {
+            document.body.classList.add('panel-hovered');
+        });
+
+        diamondContainer.addEventListener('mouseleave', function() {
+            document.body.classList.remove('panel-hovered');
+        });
+
+        diamondContainer.addEventListener('mousemove', function(e) {
+            const rect = this.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+
+            const rotateX = (y - centerY) / 20;
+            const rotateY = (centerX - x) / 20;
+
+            this.style.transform = `
+                translate(-50%, -50%)
+                rotate(45deg)
+                perspective(1000px)
+                rotateX(${rotateX}deg)
+                rotateY(${rotateY}deg)
+                scale(1.05)
+            `;
+        });
+
+        diamondContainer.addEventListener('mouseleave', function() {
+            this.style.transform = `
+                translate(-50%, -50%)
+                rotate(45deg)
+                perspective(1000px)
+                rotateX(0deg)
+                rotateY(0deg)
+                scale(1)
+            `;
+        });
+    </script>
+</body>
+</html>
