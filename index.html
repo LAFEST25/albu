@@ -525,8 +525,7 @@
         
         panels.forEach(panel => {
             panel.addEventListener('click', function() {
-                const title = this.querySelector('.panel-title').textContent;
-                console.log('Opening', title, 'album');
+                window.location.href = 'https://albumnet.lovable.app';
             });
 
             // Add blur effect on hover
@@ -578,7 +577,7 @@
 
         // Diamond holographic tilt effect
         diamondContainer.addEventListener('click', function() {
-            console.log('Opening FAREWELL album');
+            window.location.href = 'https://albumnet.lovable.app';
         });
 
         // Add blur effect on hover for diamond
